@@ -84,9 +84,25 @@ module.exports = merge(common, {
         type: 'asset/resource',
 
         generator: {
-          filename: `images/${currentYear}/${currentMonth}/[name][ext]`, // Output path and filename pattern
+          filename: (ob) => {
+            const params = new URLSearchParams(
+              ob.module.resourceResolveData.query
+            );
+
+            // Get the value of the 'w' parameter
+            const width = params.get('w');
+            console.log('WIDTH: ', width);
+
+            if (width) {
+              console.log('inside: ', width);
+
+              return `images/${currentYear}/${currentMonth}/[name]-${width}[ext]`;
+            }
+            return `images/${currentYear}/${currentMonth}/[name][ext]`;
+          }, // Output path and filename pattern
         },
       },
+
       {
         test: /\.(ttf|woff2|woff)$/i,
         type: 'asset/resource',
